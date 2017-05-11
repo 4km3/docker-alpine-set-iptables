@@ -10,4 +10,5 @@ $ docker build -t 4km3/set-iptables .
 ```
 : "${SET_IPTABLES_DEV:=eth0}"
 : "${SET_IPTABLES_PROXY_PORT:=3128}"
+: "${SET_IPTABLES_PORTS:=80 443}"
 ```

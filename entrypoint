@@ -2,11 +2,12 @@
 
 set -ex
 
+# Example values for a transparent proxy
 : "${SET_IPTABLES_DEV:=eth0}"
 : "${SET_IPTABLES_PROXY_PORT:=3128}"
+: "${SET_IPTABLES_PORTS:=80 443}"
 
-# Example ruleset for a transparent proxy
-iptables -D PREROUTING -t nat -i "${SET_IPTABLES_DEV}" -p tcp --dport 80  -j REDIRECT --to-port "${SET_IPTABLES_PROXY_PORT}" || true
-iptables -D PREROUTING -t nat -i "${SET_IPTABLES_DEV}" -p tcp --dport 443 -j REDIRECT --to-port "${SET_IPTABLES_PROXY_PORT}" || true
-iptables -A PREROUTING -t nat -i "${SET_IPTABLES_DEV}" -p tcp --dport 80  -j REDIRECT --to-port "${SET_IPTABLES_PROXY_PORT}"
-iptables -A PREROUTING -t nat -i "${SET_IPTABLES_DEV}" -p tcp --dport 443 -j REDIRECT --to-port "${SET_IPTABLES_PROXY_PORT}"
+for i in ${SET_IPTABLES_PORTS}; do
+    iptables -D PREROUTING -t nat -i "${SET_IPTABLES_DEV}" -p tcp --dport $i -j REDIRECT --to-port "${SET_IPTABLES_PROXY_PORT}" || true
+    iptables -A PREROUTING -t nat -i "${SET_IPTABLES_DEV}" -p tcp --dport $i -j REDIRECT --to-port "${SET_IPTABLES_PROXY_PORT}"
+done
